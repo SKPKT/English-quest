@@ -14,10 +14,7 @@
   <section id="worldScreen" class="screen is-visible" aria-label="English Quest world map">
     <div id="worldViewport" class="world-viewport" aria-label="Explore the English Quest map. Use arrows, joystick, or tap a destination." tabindex="0">
       <div id="worldStage" class="world-stage">
-        <img class="world-art" src="assets/world-map.webp" width="1448" height="1086" alt="Cartoon English Quest island with Free Time park, The Old House, Fashion Street, Robot Lab and Sunny Beach" draggable="false">
-        <button id="bakedHome" class="baked-control" type="button" style="left:27px;top:19px;width:104px;height:111px" aria-label="Home"></button>
-        <button id="bakedSound" class="baked-control" type="button" style="left:1153px;top:20px;width:112px;height:111px" aria-label="Toggle sound"></button>
-        <button id="bakedSettings" class="baked-control" type="button" style="left:1276px;top:20px;width:115px;height:111px" aria-label="Settings"></button>
+        <img class="world-art" src="assets/hd2d/world.png" width="1448" height="1086" alt="HD-2D English Quest island with Free Time park, The Old House, Fashion Street, Robot Lab and Sunny Beach" draggable="false">
         <div id="stationLayer"></div>
         <div id="destinationMarker" class="destination-marker" hidden aria-hidden="true"></div>
         <div id="avatar" class="avatar facing-right" role="img" aria-label="Your explorer avatar">
@@ -103,6 +100,8 @@
 <div class="modal-overlay is-hidden" id="modalOverlay"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><button class="dialog-close" id="closeDialog" type="button" aria-label="Close">✕</button><div id="dialogBody"></div></div></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script src="questions.js"></script>
+<script src="vocabulary.js"></script>
+<script src="explore.js"></script>
 <script src="app.js"></script>
 <script src="portal.js"></script>
 </body>
