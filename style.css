@@ -14,3 +14,16 @@
 .station-button .station-bubble{opacity:1;transform:translateX(-50%);background:#282050;color:#fff;border:2px solid #f4cb76;font-size:24px}
 .station-button:focus-visible .station-bubble,.station-button:hover .station-bubble{background:#493381}
 .quiz-scenery{filter:brightness(.8);transform:none}
+
+/* Vocabulary practice */
+.vocab-explore [data-action]{min-height:44px;padding:.5rem .8rem;border:2px solid #d8c9f1;border-radius:.75rem;background:#fff;color:#31205b;font-weight:750}
+.vocab-explore [aria-pressed=true]{background:#48249e;border-color:#48249e;color:#fff}
+.vocab-explore [data-result=ok]{border-color:#207953;background:#e4f8ec;color:#145d38}
+.vocab-explore [data-result=retry]{border-color:#9b5810;background:#fff1d4;color:#723900}
+.vocab-groups,.vocab-actions,.vocab-words{display:flex;flex-wrap:wrap;gap:.45rem;margin:.65rem 0;justify-content:center}
+.vocab-card{display:grid;gap:.15rem;text-align:center;background:#f4eeff;border-radius:.85rem;padding:.8rem;margin:.6rem 0}
+.vocab-card span{font-size:2rem}.vocab-card strong{font-size:1.4rem}.vocab-card small{font-size:1rem}
+.vocab-feedback{min-height:1.6em;font-weight:800}.vocab-days{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.8rem}
+.vocab-house{position:relative;margin:auto;max-width:600px}.vocab-house img{display:block;width:100%;height:auto;border-radius:.8rem}
+.vocab-explore .vocab-pin{position:absolute;transform:translate(-50%,-50%);width:44px;height:44px;min-height:44px;padding:0;border-radius:50%;background:#ffda73;border:2px solid #402368}
+.vocab-explore .vocab-pin[aria-pressed=true]{background:#48249e;color:white;border-color:white}
