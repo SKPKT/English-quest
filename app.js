@@ -4,21 +4,13 @@
   const TOPICS=window.ENGLISH_QUEST_TOPICS||[];
   const W=1448,H=1086,KEY='eq-world-playable-v2',ACTIVE_KEY='eq-active-student',ACCOUNT_PREFIX='eq-profile-v1:',ACCOUNT_INDEX='eq-profile-index-v1';
   const STATIONS=[
-    {id:'free-time',x:599,y:373,hit:[445,275,306,183],door:[598,537],image:(window.ENGLISH_QUEST_ASSETS?.['station-01.webp']||'assets/station-01.webp')},
-    {id:'old-house',x:1180,y:444,hit:[1000,307,364,245],door:[1174,602],image:(window.ENGLISH_QUEST_ASSETS?.['station-02.webp']||'assets/station-02.webp')},
-    {id:'get-dressed',x:258,y:707,hit:[60,552,392,252],door:[265,837],image:(window.ENGLISH_QUEST_ASSETS?.['station-03.webp']||'assets/station-03.webp')},
-    {id:'robot',x:632,y:830,hit:[449,690,367,240],door:[644,980],image:(window.ENGLISH_QUEST_ASSETS?.['station-04.webp']||'assets/station-04.webp')},
-    {id:'beach',x:1166,y:821,hit:[972,689,394,209],door:[1090,947],image:(window.ENGLISH_QUEST_ASSETS?.['station-05.webp']||'assets/station-05.webp')},
+    {id:'free-time',x:599,y:373,hit:[337,210,530,232],door:[614,468],image:'assets/hd2d/topic-01.png'},
+    {id:'old-house',x:1180,y:444,hit:[1007,222,330,248],door:[1114,481],image:'assets/hd2d/topic-02.png'},
+    {id:'get-dressed',x:258,y:707,hit:[64,468,320,244],door:[269,739],image:'assets/hd2d/topic-03.png'},
+    {id:'robot',x:632,y:830,hit:[383,628,347,243],door:[622,887],image:'assets/hd2d/topic-04.png'},
+    {id:'beach',x:1166,y:821,hit:[1017,605,332,224],door:[1080,836],image:'assets/hd2d/topic-05.png'},
   ];
-  const BLOCKED=[
-    [435,275,738,446],       // park building
-    [314,400,515,499],       // basketball court
-    [740,392,923,503],       // football field
-    [1009,312,1365,544],     // old house
-    [60,559,449,799],        // fashion street storefront
-    [454,696,816,932],       // robot lab
-    [978,686,1361,893],      // beach hut
-  ];
+  const BLOCKED=[[342,216,858,442],[1008,227,1324,465],[67,472,376,706],[385,638,718,866],[1030,609,1341,817]];
   const $=id=>document.getElementById(id);
   const clamp=(x,lo,hi)=>Math.min(hi,Math.max(lo,x));
   const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -60,7 +52,7 @@
   function clearRoute(){path=[];pathTarget=null;arriveTopic=null;routeCounter++;$('destinationMarker').hidden=true}
   function visibleMap(){return screen==='worldScreen'&&modalClosed()&&!document.body.classList.contains('menu-open')&&!document.getElementById('portalPanel')?.classList.contains('active')}
   function resizeMap(){const rect=$world.getBoundingClientRect();const vw=rect.width,vh=rect.height;scale=clamp(Math.max(vw/W,vh/H)*1.04,.53,1.16);if(!cameraFollow){cam.x=0;cam.y=player.y>vh/scale-68?clamp(player.y-(vh/scale)*.70,0,Math.max(0,H-vh/scale)):0;}cam.x=clamp(cam.x,0,Math.max(0,W-vw/scale));cam.y=clamp(cam.y,0,Math.max(0,H-vh/scale));drawMap()}
-  function drawMap(){const width=$world.clientWidth/scale,height=$world.clientHeight/scale;cam.x=clamp(cam.x,0,Math.max(0,W-width));cam.y=clamp(cam.y,0,Math.max(0,H-height));$stage.style.transform=`translate3d(${-Math.round(cam.x*scale)}px,${-Math.round(cam.y*scale)}px,0) scale(${scale})`;$avatar.style.left=player.x+'px';$avatar.style.top=player.y+'px';$avatar.classList.toggle('facing-left',player.dir==='left');[['homeButton',75,76],['soundButton',1210,76],['settingsButton',1330,76]].forEach(([id,x,y])=>{const sx=(x-cam.x)*scale,sy=(y-cam.y)*scale;$(id).classList.toggle('showing-baked',sx>0&&sx<$world.clientWidth&&sy>0&&sy<$world.clientHeight&&sy<135)})}
+  function drawMap(){const width=$world.clientWidth/scale,height=$world.clientHeight/scale;cam.x=clamp(cam.x,0,Math.max(0,W-width));cam.y=clamp(cam.y,0,Math.max(0,H-height));$stage.style.transform=`translate3d(${-Math.round(cam.x*scale)}px,${-Math.round(cam.y*scale)}px,0) scale(${scale})`;$avatar.style.left=player.x+'px';$avatar.style.top=player.y+'px';$avatar.classList.toggle('facing-left',player.dir==='left')}
   function screenWorldPoint(e){const rect=$world.getBoundingClientRect();return {x:(e.clientX-rect.left)/scale+cam.x,y:(e.clientY-rect.top)/scale+cam.y}}
   function updateCamera(dt){if(!cameraFollow||performance.now()<manualPanUntil)return;const vw=$world.clientWidth/scale,vh=$world.clientHeight/scale;const targetX=clamp(player.x-vw*.50,0,Math.max(0,W-vw));const targetY=clamp(player.y-vh*.55,0,Math.max(0,H-vh));const ease=Math.min(1,dt*7);cam.x+=(targetX-cam.x)*ease;cam.y+=(targetY-cam.y)*ease}
   function gridPath(from,to){
@@ -99,7 +91,7 @@
       else if(path.length){const goal=path[0],diffX=goal.x-player.x,diffY=goal.y-player.y,d=Math.hypot(diffX,diffY);const step=220*dt;if(d<=step+1){player.x=goal.x;player.y=goal.y;path.shift()}else{const xx=player.x+diffX/d*step,yy=player.y+diffY/d*step;if(walkable(xx,yy)){player.x=xx;player.y=yy}else{clearRoute();toast('Path blocked — try another way')}}if(diffX<-.2)player.dir='left';if(diffX>.2)player.dir='right';moving=true;if(!path.length&&arriveTopic){const id=arriveTopic;clearRoute();setTimeout(()=>{if(visibleMap())openStation(id)},120)}else if(!path.length){clearRoute()}}
       $avatar.classList.toggle('walking',moving);updateCamera(dt);drawMap();updateNearby();
     }else $avatar.classList.remove('walking');requestAnimationFrame(tick)}
-  function setupStations(){const layer=$('stationLayer');for(const [idx,s] of STATIONS.entries()){const t=topicFor(s.id);const b=document.createElement('button');b.type='button';b.className='station-button';b.dataset.station=s.id;b.style.cssText=`left:${s.hit[0]}px;top:${s.hit[1]}px;width:${s.hit[2]}px;height:${s.hit[3]}px`;b.setAttribute('aria-label',`Walk to Quest ${idx+1}: ${t.title}`);b.innerHTML=`<span class="station-bubble">🚪 ENTER ${escapeHTML(t.title)}</span>${state.scores[s.id]?.completed?'<span class="station-star" aria-hidden="true">⭐</span>':''}`;b.addEventListener('click',e=>{e.stopPropagation();goToStation(s.id)});layer.appendChild(b)}}
+  function setupStations(){const layer=$('stationLayer');for(const [idx,s] of STATIONS.entries()){const t=topicFor(s.id);const b=document.createElement('button');b.type='button';b.className='station-button';b.dataset.station=s.id;b.style.cssText=`left:${s.hit[0]}px;top:${s.hit[1]}px;width:${s.hit[2]}px;height:${s.hit[3]}px`;b.setAttribute('aria-label',`Walk to Quest ${idx+1}: ${t.title}`);b.innerHTML=`<span class="station-bubble">${String(idx+1).padStart(2,'0')} ${escapeHTML(t.title)}</span>${state.scores[s.id]?.completed?'<span class="station-star" aria-hidden="true">⭐</span>':''}`;b.addEventListener('click',e=>{e.stopPropagation();goToStation(s.id)});layer.appendChild(b)}}
   function refreshHUD(){$('studentName').textContent=state.name||'Explorer';$('totalScore').textContent=scoreTotal();$('completedCount').textContent=completed();$('soundButton').textContent=state.settings.sound?'🔊':'🔇';setupRefreshStars()}
   function setupRefreshStars(){document.querySelectorAll('.station-button').forEach(b=>{let star=b.querySelector('.station-star');const yes=!!state.scores[b.dataset.station]?.completed;if(yes&&!star){star=document.createElement('span');star.className='station-star';star.textContent='⭐';star.setAttribute('aria-hidden','true');b.appendChild(star)}if(!yes&&star)star.remove()})}
   function openStation(id){clearRoute();const t=topicFor(id),s=stationFor(id);if(!t||!s)return;const best=state.scores[id]?.best??0,dr=state.drafts[id];modal(`<img class="dialog-image" src="${s.image}" alt="${escapeHTML(t.title)} learning station"><h2 id="dialogTitle">Quest ${String(TOPICS.indexOf(t)+1).padStart(2,'0')}: ${escapeHTML(t.title)}</h2><p>${escapeHTML(t.intro)}</p><p>🧩 20 questions &nbsp; ⭐ Best: ${best}/20<br>🧠 ${escapeHTML(t.tagline)}<br>⏳ No time limit</p><div class="dialog-actions"><button id="startQuestBtn" type="button" class="primary-button">${dr?'▶ CONTINUE':'🚀 START QUEST'}</button>${dr?'<button id="restartQuestBtn" type="button" class="secondary-button">↻ RESTART</button>':''}</div>`);$('startQuestBtn').addEventListener('click',()=>{closeModal();startQuest(id,false)});if(dr)$('restartQuestBtn').addEventListener('click',()=>{if(confirm('Start again from question 1?')){closeModal();startQuest(id,true)}})}
@@ -123,17 +115,17 @@
   function resetJoy(){joyPid=null;joy={x:0,y:0};$('joyThumb').style.transform='translate(-50%,-50%)'}
   $('joystick').addEventListener('pointerup',resetJoy);$('joystick').addEventListener('pointercancel',resetJoy);$('joystick').addEventListener('lostpointercapture',resetJoy);
   window.addEventListener('blur',()=>{keys.clear();resetJoy()});
-  document.addEventListener('keydown',e=>{if(!visibleMap()||['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;const k=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d'].includes(k)){keys.add(k);e.preventDefault()}else if(['e','enter',' '].includes(k)){e.preventDefault();if(nearTopic)openStation(nearTopic);else chooseTopic()}});
+  document.addEventListener('keydown',e=>{if(!visibleMap()||['INPUT','TEXTAREA','BUTTON','A'].includes(document.activeElement?.tagName))return;const k=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d'].includes(k)){keys.add(k);e.preventDefault()}else if(['e','enter',' '].includes(k)){e.preventDefault();if(nearTopic)openStation(nearTopic);else chooseTopic()}});
   document.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
   $stage.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;const pt=screenWorldPoint(e);drag={id:e.pointerId,initX:e.clientX,initY:e.clientY,camX:cam.x,camY:cam.y,world:pt,moved:false};$stage.setPointerCapture(e.pointerId)});
   $stage.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;const dx=e.clientX-drag.initX,dy=e.clientY-drag.initY;if(Math.hypot(dx,dy)>9)drag.moved=true;if(drag.moved){cam.x=drag.camX-dx/scale;cam.y=drag.camY-dy/scale;manualPanUntil=performance.now()+2200;cameraFollow=false;drawMap()}});
   $stage.addEventListener('pointerup',e=>{if(!drag||drag.id!==e.pointerId)return;const d=drag;drag=null;if(!d.moved){const point=screenWorldPoint(e);if(walkable(point.x,point.y))setRoute(point.x,point.y);else toast('Tap a path or a building 👣')}});
   $stage.addEventListener('pointercancel',()=>{drag=null});
   function goStartingPoint(){clearRoute();player={x:806,y:643,dir:'right'};manualPanUntil=0;cameraFollow=false;resizeMap();toast('🏠 Back to the starting path')}
-  $('homeButton').addEventListener('click',goStartingPoint);$('bakedHome').addEventListener('click',goStartingPoint);
+  $('homeButton').addEventListener('click',goStartingPoint);
   function toggleSound(){state.settings.sound=!state.settings.sound;persist();refreshHUD();if(state.settings.sound)audioPing(true)}
-  $('soundButton').addEventListener('click',toggleSound);$('bakedSound').addEventListener('click',toggleSound);
-  $('settingsButton').addEventListener('click',()=>window.EnglishQuestPortal?.open('settings')||settings());$('bakedSettings').addEventListener('click',()=>window.EnglishQuestPortal?.open('settings')||settings());$('mapHelp').addEventListener('click',guide);$('studentButton').addEventListener('click',()=>window.EnglishQuestPortal?.open('profile')||editStudent());
+  $('soundButton').addEventListener('click',toggleSound);
+  $('settingsButton').addEventListener('click',()=>window.EnglishQuestPortal?.open('settings')||settings());$('mapHelp').addEventListener('click',guide);$('studentButton').addEventListener('click',()=>window.EnglishQuestPortal?.open('profile')||editStudent());
   $('actionButton').addEventListener('click',()=>nearTopic?openStation(nearTopic):chooseTopic());$('promptEnter').addEventListener('click',()=>{if(nearTopic)openStation(nearTopic)});
   $('closeDialog').addEventListener('click',closeModal);$('modalOverlay').addEventListener('click',e=>{if(e.target===$('modalOverlay'))closeModal()});
   $('quizBack').addEventListener('click',returnToWorld);$('nextButton').addEventListener('click',nextQuestion);
